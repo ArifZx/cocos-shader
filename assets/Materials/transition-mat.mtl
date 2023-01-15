@@ -27,7 +27,7 @@
   ],
   "_props": [
     {
-      "cutoff": 0.26,
+      "cutoff": 0,
       "transitionColor": {
         "__type__": "cc.Color",
         "r": 0,
@@ -36,7 +36,7 @@
         "a": 255
       },
       "transitionTexture": {
-        "__uuid__": "52ded09a-9aa4-453b-9470-be5b8c033628@6c48a",
+        "__uuid__": "d7699e23-53f7-4948-b9f9-6c84d2bd2350@6c48a",
         "__expectedType__": "cc.Texture2D"
       }
     }
