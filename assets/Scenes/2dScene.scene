@@ -1373,7 +1373,7 @@
       "r": 255,
       "g": 255,
       "b": 255,
-      "a": 102
+      "a": 1
     },
     "_spriteFrame": {
       "__uuid__": "745b1b67-e349-438d-99e4-d0f783d8b704@f9941",
@@ -1409,13 +1409,13 @@
     },
     "_transitionColor": {
       "__type__": "cc.Color",
-      "r": 216,
-      "g": 53,
-      "b": 53,
+      "r": 0,
+      "g": 0,
+      "b": 0,
       "a": 255
     },
-    "transitionType": 1,
-    "_cutoff": 0.5,
+    "_transitionType": 1,
+    "_cutoff": 0.3333,
     "_id": "c2HuUGFLdKIbKMWzmwjKMY"
   },
   {

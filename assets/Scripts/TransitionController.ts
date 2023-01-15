@@ -67,8 +67,18 @@ export class TransitionController extends Component {
     }
   }
 
-  @property({ type: TransitionType })
-  transitionType = TransitionType.NONE;
+  @property({ type: TransitionType, visible: false })
+  private _transitionType = TransitionType.NONE;
+
+  @property({type: TransitionType})
+  get transitionType() {
+    return this._transitionType;
+  }
+
+  set transitionType(value: TransitionType) {
+    this._transitionType = value;
+    this.updateDefines(value);
+  }
 
   sprite: Sprite | null = null;
 
@@ -85,11 +95,26 @@ export class TransitionController extends Component {
     this.setSpriteCutoff(this._cutoff);
   }
 
+  private defines = {
+    USE_TRANSITION_TEXTURE: false,
+    USE_FADE: false,
+    USE_LEFT_RIGHT: false,
+    USE_CURTAIN_FALL: false,
+    USE_VERTICAL_REFLECTED_WIPE: false,
+    USE_SPINNING_PIZZA_SLICE: false,
+    USE_FLOKS: false,
+    USE_FLIP_FLOKS: false,
+  };
+
   onLoad() {
     this.sprite = this.getComponent(Sprite);
   }
 
   start() {
+    this.updateDefines(this.transitionType);
+  }
+
+  private initProperties() {
     this.cutoff = this.cutoff;
     this.transitionTexture = this.transitionTexture;
     this.transitionColor = this.transitionColor;
@@ -106,5 +131,18 @@ export class TransitionController extends Component {
     const mat = this.getMat();
     if (!mat) return;
     mat.setProperty("cutoff", clamp01(value), 0);
+  }
+
+  private updateDefines(type: TransitionType) {
+    const mat = this.getMat();
+    if (!mat) return;
+
+    const kTrue = `USE_${TransitionType[type]}`;
+    Object.keys(this.defines).forEach((k) => {
+        this.defines[k] = k === kTrue;
+    });
+
+    mat.recompileShaders(this.defines, 0);
+    this.initProperties();
   }
 }
