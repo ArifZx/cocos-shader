@@ -13,8 +13,7 @@
       "USE_PIXEL_ALIGNMENT": true,
       "USE_ALPHA_TEST": true,
       "USE_TEXTURE": true,
-      "USE_FADE": true,
-      "USE_VERTICAL_REFLECTED_WIPE": true
+      "USE_TRANSITION_TEXTURE": true
     }
   ],
   "_states": [
@@ -30,7 +29,7 @@
   ],
   "_props": [
     {
-      "cutoff": 0.5,
+      "cutoff": 0.38,
       "transitionColor": {
         "__type__": "cc.Color",
         "r": 0,
@@ -39,7 +38,7 @@
         "a": 255
       },
       "transitionTexture": {
-        "__uuid__": "d7699e23-53f7-4948-b9f9-6c84d2bd2350@6c48a",
+        "__uuid__": "52ded09a-9aa4-453b-9470-be5b8c033628@6c48a",
         "__expectedType__": "cc.Texture2D"
       }
     }
