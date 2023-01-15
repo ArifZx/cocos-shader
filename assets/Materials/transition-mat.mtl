@@ -10,7 +10,11 @@
   "_techIdx": 0,
   "_defines": [
     {
-      "USE_TEXTURE": true
+      "USE_PIXEL_ALIGNMENT": true,
+      "USE_ALPHA_TEST": true,
+      "USE_TEXTURE": true,
+      "USE_FADE": true,
+      "USE_VERTICAL_REFLECTED_WIPE": true
     }
   ],
   "_states": [
@@ -26,7 +30,7 @@
   ],
   "_props": [
     {
-      "cutoff": 0,
+      "cutoff": 0.5,
       "transitionColor": {
         "__type__": "cc.Color",
         "r": 0,

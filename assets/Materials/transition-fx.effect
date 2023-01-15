@@ -67,10 +67,12 @@ CCProgram sprite-vs %{
 
 CCProgram sprite-fs %{
   precision highp float;
+
   #include <builtin/internal/embedded-alpha>
   #include <builtin/internal/alpha-test>
-  #define PI 3.1415926538
 
+  #define PI 3.1415926538
+  
   in vec4 color;
 
   uniform Constant{
@@ -84,9 +86,9 @@ CCProgram sprite-fs %{
     layout(set = 2, binding = 11) uniform sampler2D cc_spriteTexture;
   #endif
 
-  #if USE_TRANSITION_TEXTURE
+#if USE_TRANSITION_TEXTURE
     uniform sampler2D transitionTexture;
-  #endif
+#endif
 
 #if USE_SPINNING_PIZZA_SLICE
     float quarterCircumference = 2.0 * PI * 1.0 / 4.0;

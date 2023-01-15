@@ -164,10 +164,7 @@
     "_iso": 0,
     "_screenScale": 1,
     "_visibility": 41943040,
-    "_targetTexture": {
-      "__uuid__": "ab90da2d-ae2c-43c6-be09-4fcf72092279",
-      "__expectedType__": "cc.RenderTexture"
-    },
+    "_targetTexture": null,
     "_cameraType": -1,
     "_trackingType": 0,
     "_id": "c0QjjVsvJMJLjrSq+PAqqK"
@@ -1306,10 +1303,10 @@
       "r": 255,
       "g": 255,
       "b": 255,
-      "a": 1
+      "a": 5
     },
     "_spriteFrame": {
-      "__uuid__": "20835ba4-6145-4fbc-a58a-051ce700aa3e@f9941",
+      "__uuid__": "745b1b67-e349-438d-99e4-d0f783d8b704@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
     "_type": 0,
