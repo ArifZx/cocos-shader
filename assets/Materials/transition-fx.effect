@@ -1,0 +1,196 @@
+// Effect Syntax Guide: https://docs.cocos.com/creator/manual/zh/shader/index.html
+
+CCEffect %{
+  techniques:
+  - name: transition
+    passes:
+    - vert: sprite-vs:vert
+      frag: sprite-fs:frag
+      depthStencilState:
+        deptTest: false
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      rasterizerState:
+        cullMode: none
+      properties: &props
+        cutoff: { value: 1.0, editor: {range: [0.0, 1.0, 0.01]} }
+        transitionColor: { value: [1.0, 1.0, 1.0, 1.0], editor: {type: color} }
+        transitionTexture: { value: white }
+
+}%
+
+CCProgram sprite-vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #if USE_LOCAL
+    #include <builtin/uniforms/cc-local>
+  #endif
+  #if SAMPLE_FROM_RT
+    #include <common/common-define>
+  #endif
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  in vec4 a_color;
+
+  out vec4 color;
+  out vec2 uv0;
+
+  vec4 vert () {
+    vec4 pos = vec4(a_position, 1);
+
+    #if USE_LOCAL
+      pos = cc_matWorld * pos;
+    #endif
+
+    #if USE_PIXEL_ALIGNMENT
+      pos = cc_matView * pos;
+      pos.xyz = floor(pos.xyz);
+      pos = cc_matProj * pos;
+    #else
+      pos = cc_matViewProj * pos;
+    #endif
+
+    uv0 = a_texCoord;
+    #if SAMPLE_FROM_RT
+      CC_HANDLE_RT_SAMPLE_FLIP(uv0);
+    #endif
+    color = a_color;
+
+    return pos;
+  }
+}%
+
+CCProgram sprite-fs %{
+  precision highp float;
+  #include <builtin/internal/embedded-alpha>
+  #include <builtin/internal/alpha-test>
+  #define PI 3.1415926538
+
+  in vec4 color;
+
+  uniform Constant{
+    vec4 transitionColor;
+    float cutoff;
+  };   
+
+  #if USE_TEXTURE
+    in vec2 uv0;
+    #pragma builtin(local)
+    layout(set = 2, binding = 11) uniform sampler2D cc_spriteTexture;
+  #endif
+
+  #if USE_TRANSITION_TEXTURE
+    uniform sampler2D transitionTexture;
+  #endif
+
+#if USE_SPINNING_PIZZA_SLICE
+    float quarterCircumference = 2.0 * PI * 1.0 / 4.0;
+    float rightAngle = radians(90.0);
+#endif
+    
+#if USE_FLOKS
+    float maxRadius = sqrt(0.5 * 0.5 + 0.5 * 0.5);
+#endif
+
+#if USE_FLIP_FLOKS
+    float maxRadiusFlip = sqrt(0.5 * 0.5 + 0.5 * 0.5);
+#endif
+
+  float when_eqf(float x, float y) {
+    return 1.0 - abs(sign(x - y));
+  }
+
+  float when_neqf(float x, float y) {
+    return abs(sign(x - y));
+  }
+
+  float when_gtf(float x, float y) {
+    return max(sign(x - y), 0.0); 
+  } 
+
+  float when_ltf(float x, float y) {
+    return max(sign(y - x), 0.0);
+  }
+
+  float when_gef(float x, float y) {
+    return 1.0 - when_ltf(x, y);
+  }
+
+  float when_lef(float x, float y) {
+    return 1.0 - when_gtf(x, y);
+  }
+
+  float orf(float x, float y) {
+    return min(x + y, 1.0);
+  }
+
+  float andf(float x, float y) {
+    return x * y;
+  }
+
+  float getPizzaAngle(vec2 p){
+    return mix(PI, 2.0 * atan(p.y / (length(p) + p.x)), orf(when_gtf(p.x, 0.0), when_neqf(p.y, 0.0)));
+  }
+
+  vec4 frag () {
+    vec4 o = vec4(1, 1, 1, 1);
+
+#if USE_TEXTURE            
+      o *= CCSampleWithAlphaSeparated(cc_spriteTexture, uv0); 
+  #if IS_GRAY
+      float gray  = 0.2126 * o.r + 0.7152 * o.g + 0.0722 * o.b;
+      o.r = o.g = o.b = gray;
+  #endif
+#endif
+
+      o *= color;
+
+#if USE_TRANSITION_TEXTURE
+      vec4 tTex = CCSampleWithAlphaSeparated(transitionTexture, uv0);
+      o = mix(o, transitionColor, when_lef(tTex.r, cutoff));
+#endif
+
+#if USE_FADE// FADE
+      o = mix(o, transitionColor, cutoff);
+#endif
+
+#if USE_LEFT_RIGHT // LEFT RIGHT
+      o = mix(o, transitionColor, when_lef(uv0.x, cutoff));
+#endif
+
+#if USE_CURTAIN_FALL // CURTAIN FALL
+      o = mix(o, transitionColor, when_lef(uv0.y, cutoff));
+#endif
+
+#if USE_VERTICAL_REFLECTED_WIPE // Vertical Reflected Wipe
+      o = mix(o, transitionColor, when_gtf(abs(uv0.y-0.5) * 2.0, 1.0 - cutoff));
+#endif
+
+#if USE_SPINNING_PIZZA_SLICE
+      float pAngle = mod(getPizzaAngle(uv0 - 0.5), rightAngle);
+      float cutoffAngle = cutoff * quarterCircumference;
+      o = mix(o, transitionColor, when_ltf(pAngle, cutoffAngle));
+#endif
+
+#if USE_FLOKS
+      float distanceMiddle = length(uv0 - 0.5);
+      float radiusCutoff = (1.0 - cutoff) * maxRadius;
+      o = mix(o, transitionColor, when_ltf(radiusCutoff, distanceMiddle));
+#endif
+
+#if USE_FLIP_FLOKS
+      float distanceMiddleFlip = length(uv0 - 0.5);
+      float radiusCutoffFlip =  cutoff * maxRadiusFlip;
+      o = mix(o, transitionColor, when_ltf(distanceMiddleFlip, radiusCutoffFlip));
+#endif
+
+    ALPHA_TEST(o);
+    return o;
+  }
+}%
+
