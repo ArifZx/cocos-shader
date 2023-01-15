@@ -10,8 +10,6 @@
   "_techIdx": 0,
   "_defines": [
     {
-      "USE_PIXEL_ALIGNMENT": true,
-      "USE_ALPHA_TEST": true,
       "USE_TEXTURE": true,
       "USE_TRANSITION_TEXTURE": true
     }
@@ -29,7 +27,7 @@
   ],
   "_props": [
     {
-      "cutoff": 0.38,
+      "cutoff": 0.26,
       "transitionColor": {
         "__type__": "cc.Color",
         "r": 0,

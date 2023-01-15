@@ -7,5 +7,40 @@
     ".json"
   ],
   "subMetas": {},
-  "userData": {}
+  "userData": {
+    "combinations": [
+      {
+        "USE_TEXTURE": [
+          true
+        ],
+        "USE_TRANSITION_TEXTURE": [
+          false
+        ],
+        "USE_SPINNING_PIZZA_SLICE": [
+          false
+        ],
+        "USE_FLOKS": [
+          false
+        ],
+        "USE_FLIP_FLOKS": [
+          false
+        ],
+        "IS_GRAY": [
+          false
+        ],
+        "USE_FADE": [
+          false
+        ],
+        "USE_LEFT_RIGHT": [
+          false
+        ],
+        "USE_CURTAIN_FALL": [
+          false
+        ],
+        "USE_VERTICAL_REFLECTED_WIPE": [
+          false
+        ]
+      }
+    ]
+  }
 }
