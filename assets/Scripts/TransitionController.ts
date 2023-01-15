@@ -70,7 +70,7 @@ export class TransitionController extends Component {
   @property({ type: TransitionType, visible: false })
   private _transitionType = TransitionType.NONE;
 
-  @property({type: TransitionType})
+  @property({ type: TransitionType })
   get transitionType() {
     return this._transitionType;
   }
@@ -139,7 +139,7 @@ export class TransitionController extends Component {
 
     const kTrue = `USE_${TransitionType[type]}`;
     Object.keys(this.defines).forEach((k) => {
-        this.defines[k] = k === kTrue;
+      this.defines[k] = k === kTrue;
     });
 
     mat.recompileShaders(this.defines, 0);
